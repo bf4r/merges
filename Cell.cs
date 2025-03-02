@@ -21,25 +21,30 @@ public class Cell
         else
             Console.ForegroundColor = ConsoleColor.White;
 
-        Console.SetCursorPosition(X * Width, Y * Height);
-        Console.Write(new string('-', Width));
+        var startX = X * Width + X;
+        var startY = Y * Height + Y;
+        Console.SetCursorPosition(startX, startY);
+        Console.Write('┌');
+        Console.Write(new string('─', Width - 2));
+        Console.Write('┐');
         for (int i = 1; i < Height; i++)
         {
-            Console.SetCursorPosition(X * Width, Y * Height + i);
-            Console.Write('|');
+            Console.SetCursorPosition(startX, startY + i);
+            Console.Write('│');
         }
         for (int i = 1; i < Height; i++)
         {
-            Console.SetCursorPosition(X * Width + Width - 1, Y * Height + i);
-            Console.Write('|');
+            Console.SetCursorPosition(startX + Width - 1, startY + i);
+            Console.Write('│');
         }
-        Console.SetCursorPosition(X * Width, Y * Height + Height);
-        Console.Write(new string('-', Width));
-
+        Console.SetCursorPosition(startX, startY + Height);
+        Console.Write('└');
+        Console.Write(new string('─', Width - 2));
+        Console.Write('┘');
         if (!selected)
         {
             var levelText = Level.ToString();
-            Console.SetCursorPosition(X * Width + Width / 2 - levelText.Length / 2, Y * Height + Height / 2);
+            Console.SetCursorPosition(startX + Width / 2 - levelText.Length / 2, startY + Height / 2);
             Console.Write(levelText);
         }
     }
