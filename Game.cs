@@ -28,8 +28,30 @@ public class Game
         {
             PrintMap();
             HandleKey();
+            HandleLogic();
         }
         Console.CursorVisible = true;
+    }
+    void HandleLogic()
+    {
+
+    }
+    void SpawnNewCell()
+    {
+        if (Cells.Count != Width * Height)
+        {
+        again:
+            var x = Random.Shared.Next(Width);
+            var y = Random.Shared.Next(Height);
+            if (Cells.Any(c => c.X == x && c.Y == y))
+            {
+                goto again;
+            }
+            else
+            {
+                Cells.Add(new Cell(0, x, y));
+            }
+        }
     }
     void HandleKey()
     {
@@ -39,6 +61,9 @@ public class Game
         {
             case ConsoleKey.Q:
                 Running = false;
+                break;
+            case ConsoleKey.Spacebar:
+                SpawnNewCell();
                 break;
             case ConsoleKey.A:
             case ConsoleKey.H:
