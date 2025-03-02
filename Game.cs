@@ -4,6 +4,10 @@ public class Game
 {
     public List<Cell> Cells { get; set; }
     public bool Running { get; set; }
+    public int SelectionX { get; set; }
+    public int SelectionY { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
     public Game()
     {
         Cells = [];
@@ -12,6 +16,10 @@ public class Game
             Cells.Add(new Cell(i + 1, i, i));
         }
         Running = true;
+        SelectionX = 0;
+        SelectionY = 0;
+        Width = 4;
+        Height = 4;
     }
     public void Run()
     {
@@ -32,6 +40,30 @@ public class Game
             case ConsoleKey.Q:
                 Running = false;
                 break;
+            case ConsoleKey.A:
+            case ConsoleKey.H:
+                SelectionX--;
+                if (SelectionX < 0)
+                    SelectionX = Width - 1;
+                break;
+            case ConsoleKey.D:
+            case ConsoleKey.L:
+                SelectionX++;
+                if (SelectionX > Width - 1)
+                    SelectionX = 0;
+                break;
+            case ConsoleKey.S:
+            case ConsoleKey.J:
+                SelectionY++;
+                if (SelectionY > Height - 1)
+                    SelectionY = 0;
+                break;
+            case ConsoleKey.W:
+            case ConsoleKey.K:
+                SelectionY--;
+                if (SelectionY < 0)
+                    SelectionY = Height - 1;
+                break;
         }
     }
     void PrintMap()
@@ -39,7 +71,9 @@ public class Game
         Console.Clear();
         foreach (var cell in Cells)
         {
-            cell.Draw();
+            cell.Draw(false);
         }
+        var selCell = new Cell(-1, SelectionX, SelectionY);
+        selCell.Draw(true);
     }
 }
