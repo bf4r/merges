@@ -16,10 +16,22 @@ public class Cell
 
     public void Draw(bool selected = false)
     {
+        var random = new Random(Level);
         if (selected)
             Console.ForegroundColor = ConsoleColor.Cyan;
         else
-            Console.ForegroundColor = ConsoleColor.White;
+        {
+            ConsoleColor[] colors = {
+                ConsoleColor.Gray,
+                ConsoleColor.Red,
+                ConsoleColor.Yellow,
+                ConsoleColor.Magenta,
+                ConsoleColor.Blue,
+                ConsoleColor.Green,
+            };
+            var color = colors[(Level - 1) % colors.Length];
+            Console.ForegroundColor = color;
+        }
 
         var startX = X * Width + X;
         var startY = Y * Height + Y;
