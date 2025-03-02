@@ -119,7 +119,6 @@ public class Game
     void Merge(int offsetX, int offsetY)
     {
         var cell = Cells.FirstOrDefault(c => c.X == SelectionX && c.Y == SelectionY);
-        if (cell == null) return;
         var targetX = SelectionX + offsetX;
         var targetY = SelectionY + offsetY;
         if (targetX > Width - 1)
@@ -130,6 +129,12 @@ public class Game
             targetY = 0;
         if (targetY < 0)
             targetY = Height - 1;
+        if (cell == null)
+        {
+            SelectionX = targetX;
+            SelectionY = targetY;
+            return;
+        }
         var otherCell = Cells.FirstOrDefault(c => c.X == targetX && c.Y == targetY);
         if (otherCell == null)
         {
