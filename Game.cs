@@ -14,8 +14,8 @@ public class Game
         Running = true;
         SelectionX = 0;
         SelectionY = 0;
-        Width = 4;
-        Height = 4;
+        Width = 6;
+        Height = 6;
     }
     public void Run()
     {
