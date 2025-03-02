@@ -2,6 +2,8 @@ namespace merges;
 
 public class Cell
 {
+    public const int Width = 10;
+    public const int Height = 4;
     public int Level { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
@@ -19,26 +21,25 @@ public class Cell
         else
             Console.ForegroundColor = ConsoleColor.White;
 
-        var width = 10;
-        var height = 4;
-        Console.SetCursorPosition(X * width, Y * height);
-        Console.Write(new string('-', width));
-        for (int i = 1; i < height; i++)
+        Console.SetCursorPosition(X * Width, Y * Height);
+        Console.Write(new string('-', Width));
+        for (int i = 1; i < Height; i++)
         {
-            Console.SetCursorPosition(X * width, Y * height + i);
+            Console.SetCursorPosition(X * Width, Y * Height + i);
             Console.Write('|');
         }
-        for (int i = 1; i < height; i++)
+        for (int i = 1; i < Height; i++)
         {
-            Console.SetCursorPosition(X * width + width - 1, Y * height + i);
+            Console.SetCursorPosition(X * Width + Width - 1, Y * Height + i);
             Console.Write('|');
         }
-        Console.SetCursorPosition(X * width, Y * height + height);
-        Console.Write(new string('-', width));
+        Console.SetCursorPosition(X * Width, Y * Height + Height);
+        Console.Write(new string('-', Width));
+
         if (!selected)
         {
             var levelText = Level.ToString();
-            Console.SetCursorPosition(X * width + width / 2 - levelText.Length / 2, Y * height + height / 2);
+            Console.SetCursorPosition(X * Width + Width / 2 - levelText.Length / 2, Y * Height + Height / 2);
             Console.Write(levelText);
         }
     }
