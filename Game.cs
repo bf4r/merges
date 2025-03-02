@@ -11,10 +11,6 @@ public class Game
     public Game()
     {
         Cells = [];
-        for (int i = 0; i < 4; i++)
-        {
-            Cells.Add(new Cell(i + 1, i, i));
-        }
         Running = true;
         SelectionX = 0;
         SelectionY = 0;
@@ -28,13 +24,8 @@ public class Game
         {
             PrintMap();
             HandleKey();
-            HandleLogic();
         }
         Console.CursorVisible = true;
-    }
-    void HandleLogic()
-    {
-
     }
     void SpawnNewCell()
     {
@@ -57,39 +48,107 @@ public class Game
     {
         var ki = Console.ReadKey(true);
         var key = ki.Key;
-        switch (key)
+        var shift = ki.Modifiers == ConsoleModifiers.Shift;
+        if (!shift)
         {
-            case ConsoleKey.Q:
-                Running = false;
-                break;
-            case ConsoleKey.Spacebar:
-                SpawnNewCell();
-                break;
-            case ConsoleKey.A:
-            case ConsoleKey.H:
-                SelectionX--;
-                if (SelectionX < 0)
-                    SelectionX = Width - 1;
-                break;
-            case ConsoleKey.D:
-            case ConsoleKey.L:
-                SelectionX++;
-                if (SelectionX > Width - 1)
-                    SelectionX = 0;
-                break;
-            case ConsoleKey.S:
-            case ConsoleKey.J:
-                SelectionY++;
-                if (SelectionY > Height - 1)
-                    SelectionY = 0;
-                break;
-            case ConsoleKey.W:
-            case ConsoleKey.K:
-                SelectionY--;
-                if (SelectionY < 0)
-                    SelectionY = Height - 1;
-                break;
+            switch (key)
+            {
+                case ConsoleKey.Q:
+                    Running = false;
+                    break;
+                case ConsoleKey.Spacebar:
+                    SpawnNewCell();
+                    break;
+                case ConsoleKey.A:
+                case ConsoleKey.H:
+                case ConsoleKey.LeftArrow:
+                    SelectionX--;
+                    if (SelectionX < 0)
+                        SelectionX = Width - 1;
+                    break;
+                case ConsoleKey.D:
+                case ConsoleKey.L:
+                case ConsoleKey.RightArrow:
+                    SelectionX++;
+                    if (SelectionX > Width - 1)
+                        SelectionX = 0;
+                    break;
+                case ConsoleKey.S:
+                case ConsoleKey.J:
+                case ConsoleKey.DownArrow:
+                    SelectionY++;
+                    if (SelectionY > Height - 1)
+                        SelectionY = 0;
+                    break;
+                case ConsoleKey.W:
+                case ConsoleKey.K:
+                case ConsoleKey.UpArrow:
+                    SelectionY--;
+                    if (SelectionY < 0)
+                        SelectionY = Height - 1;
+                    break;
+            }
         }
+        else
+        {
+            switch (key)
+            {
+                case ConsoleKey.A:
+                case ConsoleKey.H:
+                case ConsoleKey.LeftArrow:
+                    Merge(-1, 0);
+                    break;
+                case ConsoleKey.D:
+                case ConsoleKey.L:
+                case ConsoleKey.RightArrow:
+                    Merge(1, 0);
+                    break;
+                case ConsoleKey.S:
+                case ConsoleKey.J:
+                case ConsoleKey.DownArrow:
+                    Merge(0, 1);
+                    break;
+                case ConsoleKey.W:
+                case ConsoleKey.K:
+                case ConsoleKey.UpArrow:
+                    Merge(0, -1);
+                    break;
+            }
+        }
+    }
+    void Merge(int offsetX, int offsetY)
+    {
+        var cell = Cells.FirstOrDefault(c => c.X == SelectionX && c.Y == SelectionY);
+        if (cell == null) return;
+        var targetX = SelectionX + offsetX;
+        var targetY = SelectionY + offsetY;
+        var otherCell = Cells.FirstOrDefault(c => c.X == targetX && c.Y == targetY && c.Level == cell.Level);
+        if (otherCell == null)
+        {
+            // move it
+            if (!Cells.Any(c => c.X == cell.X + offsetX && c.Y == cell.Y + offsetY))
+            {
+                cell.X += offsetX;
+                cell.Y += offsetY;
+                if (cell.X > Width - 1)
+                    cell.X = 0;
+                if (cell.X < 0)
+                    cell.X = Width - 1;
+                if (cell.Y > Height - 1)
+                    cell.Y = 0;
+                if (cell.Y < 0)
+                    cell.Y = Height - 1;
+                SelectionX = cell.X;
+                SelectionY = cell.Y;
+            }
+            return;
+        }
+        Cells.Remove(cell);
+        Cells.Remove(otherCell);
+        var newCell = new Cell(cell.Level + 1, targetX, targetY);
+        Cells.Add(newCell);
+        SelectionX = newCell.X;
+        SelectionY = newCell.Y;
     }
     void PrintMap()
     {
