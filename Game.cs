@@ -2,22 +2,36 @@ namespace merges;
 
 public class Game
 {
-    List<Cell> Cells { get; set; }
+    public List<Cell> Cells { get; set; }
+    public bool Running { get; set; }
     public Game()
     {
         Cells = [];
         for (int i = 0; i < 4; i++)
         {
-            Cells.Add(new Cell(1, i, 0));
+            Cells.Add(new Cell(i + 1, i, i));
         }
+        Running = true;
     }
     public void Run()
     {
-        bool running = true;
-        while (running)
+        Console.CursorVisible = false;
+        while (Running)
         {
             PrintMap();
-            Console.ReadKey();
+            HandleKey();
+        }
+        Console.CursorVisible = true;
+    }
+    void HandleKey()
+    {
+        var ki = Console.ReadKey(true);
+        var key = ki.Key;
+        switch (key)
+        {
+            case ConsoleKey.Q:
+                Running = false;
+                break;
         }
     }
     void PrintMap()

@@ -1,15 +1,17 @@
 namespace merges;
 
-class Cell
+public class Cell
 {
     public int Level { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
+    public bool IsSelected { get; set; }
     public Cell(int level, int x, int y)
     {
         Level = level;
         X = x;
         Y = y;
+        IsSelected = false;
     }
 
     public void Draw()
@@ -17,6 +19,6 @@ class Cell
         var width = 10;
         var height = 5;
         Console.SetCursorPosition(X * width, Y * height);
-        Console.Write('s');
+        Console.Write(Level);
     }
 }
