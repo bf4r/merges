@@ -122,33 +122,33 @@ public class Game
         if (cell == null) return;
         var targetX = SelectionX + offsetX;
         var targetY = SelectionY + offsetY;
-        var otherCell = Cells.FirstOrDefault(c => c.X == targetX && c.Y == targetY && c.Level == cell.Level);
+        if (targetX > Width - 1)
+            targetX = 0;
+        if (targetX < 0)
+            targetX = Width - 1;
+        if (targetY > Height - 1)
+            targetY = 0;
+        if (targetY < 0)
+            targetY = Height - 1;
+        var otherCell = Cells.FirstOrDefault(c => c.X == targetX && c.Y == targetY);
         if (otherCell == null)
         {
             // move it
-            if (!Cells.Any(c => c.X == cell.X + offsetX && c.Y == cell.Y + offsetY))
-            {
-                cell.X += offsetX;
-                cell.Y += offsetY;
-                if (cell.X > Width - 1)
-                    cell.X = 0;
-                if (cell.X < 0)
-                    cell.X = Width - 1;
-                if (cell.Y > Height - 1)
-                    cell.Y = 0;
-                if (cell.Y < 0)
-                    cell.Y = Height - 1;
-                SelectionX = cell.X;
-                SelectionY = cell.Y;
-            }
+            cell.X = targetX;
+            cell.Y = targetY;
+            SelectionX = cell.X;
+            SelectionY = cell.Y;
             return;
         }
-        Cells.Remove(cell);
-        Cells.Remove(otherCell);
-        var newCell = new Cell(cell.Level + 1, targetX, targetY);
-        Cells.Add(newCell);
-        SelectionX = newCell.X;
-        SelectionY = newCell.Y;
+        if (otherCell.Level == cell.Level)
+        {
+            Cells.Remove(cell);
+            Cells.Remove(otherCell);
+            var newCell = new Cell(cell.Level + 1, targetX, targetY);
+            Cells.Add(newCell);
+            SelectionX = newCell.X;
+            SelectionY = newCell.Y;
+        }
     }
     void PrintMap()
     {
