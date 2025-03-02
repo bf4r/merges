@@ -1,8 +1,11 @@
 # merges
-CLI merging game
+TUI (terminal) merging game
 
 ## Requirements
-.NET 9.0 Runtime
+[.NET 9.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+
+## Compatibility
+Windows, MacOS, Linux
 
 ## Usage
 Clone the repo, navigate into it and run the project:
