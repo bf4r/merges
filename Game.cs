@@ -40,7 +40,7 @@ public class Game
             }
             else
             {
-                Cells.Add(new Cell(0, x, y));
+                Cells.Add(new Cell(1, x, y));
             }
         }
     }
