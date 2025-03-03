@@ -8,14 +8,19 @@ public class Game
     public int SelectionY { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
+    public List<string> Messages { get; set; }
+    public const int MaxMessages = 5;
+    public static TimeSpan SpawnCooldown = TimeSpan.FromSeconds(1);
     public Game()
     {
         Cells = [];
+        Messages = [];
         Running = true;
         SelectionX = 0;
         SelectionY = 0;
-        Width = 6;
-        Height = 6;
+
+        Width = 4;
+        Height = 4;
     }
     public void Run()
     {
@@ -27,21 +32,34 @@ public class Game
         }
         Console.CursorVisible = true;
     }
+    public DateTime LastSpawned { get; set; }
     void SpawnNewCell()
     {
-        if (Cells.Count != Width * Height)
+        if (LastSpawned == default)
         {
-        again:
-            var x = Random.Shared.Next(Width);
-            var y = Random.Shared.Next(Height);
-            if (Cells.Any(c => c.X == x && c.Y == y))
+            LastSpawned = DateTime.Now - SpawnCooldown - TimeSpan.FromSeconds(1);
+        }
+        if (DateTime.Now - LastSpawned > SpawnCooldown)
+        {
+            if (Cells.Count != Width * Height)
             {
-                goto again;
+            again:
+                var x = Random.Shared.Next(Width);
+                var y = Random.Shared.Next(Height);
+                if (Cells.Any(c => c.X == x && c.Y == y))
+                {
+                    goto again;
+                }
+                else
+                {
+                    Cells.Add(new Cell(1, x, y));
+                    LastSpawned = DateTime.Now;
+                }
             }
-            else
-            {
-                Cells.Add(new Cell(1, x, y));
-            }
+        }
+        else
+        {
+            Write($"Cooldown: {Math.Round((SpawnCooldown - (DateTime.Now - LastSpawned)).TotalSeconds, 1)}s");
         }
     }
     void HandleKey()
@@ -164,5 +182,23 @@ public class Game
         }
         var selCell = new Cell(-1, SelectionX, SelectionY);
         selCell.Draw(true);
+        if (Messages.Count > 0)
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(0, Height * Cell.Height + Height);
+            Console.WriteLine();
+            int i = 0;
+            foreach (var message in Messages)
+            {
+                Console.WriteLine(message);
+                i++;
+                if (i > MaxMessages) break;
+            }
+            Messages.Clear();
+        }
+    }
+    void Write(string message)
+    {
+        Messages.Add(message);
     }
 }
